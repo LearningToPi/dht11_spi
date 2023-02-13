@@ -21,9 +21,9 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://www.learningtopi.com/python-modules-applications/python_logging_handler/"
-"Bug Tracker" = "https://github.com/LearningToPi/logging_handler/issues"
-"Source Code" = "https://github.com/LearningToPi/logging_handler"
+"Homepage" = "https://www.learningtopi.com/python-modules-applications/dht11_spi/"
+"Bug Tracker" = "https://github.com/LearningToPi/dht11_spi/issues"
+"Source Code" = "https://github.com/LearningToPi/dht11_spi"
 
 [build-system]
 requires = ["setuptools>=61"]
