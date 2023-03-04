@@ -1,5 +1,57 @@
 '''
+Usage:
+======
 
+$ python3 -m dht11_spi --help
+usage: __main__.py [-h] [--gpio-chip GPIO_CHIP] [--dht22] [--time TIME] [--interval INTERVAL] [--spi SPI_BUS] [--spi-freq SPI_FREQ] [--rpi-lib] [--temp-f] gpio
+
+Start a DHT11/22 test run using the dht11_spi library or the default RPi based library. Defaults to DHT11 unless --dht22 flag provided.
+
+positional arguments:
+  gpio                  GPIO to use for signaling the DHT sensor. If using GPIO_CHIP other than 0, set the "--gpio-chip x" option.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --gpio-chip GPIO_CHIP
+                        (default 0) GPIO chip for the GPIO provided. (0 typical for Pi4)
+  --dht22               (default False) Marks the sensor as a DHT22 (different calculations used)
+  --time TIME           (default 120) Time in seconds to run the test
+  --interval INTERVAL   (default 1 for dht11, 2 for dht22) Interval between reads. 1sec min for DHT11, 2sec min for DHT22 (per spec)
+  --spi SPI_BUS         (default 0) SPI Bus number to use (assumes kernel driver loaded and accessible by spidev)
+  --spi-freq SPI_FREQ   (default 500000Hz) Frequence to run on the SPI Bus. Min tested is 250000Hz
+  --rpi-lib             (default False) Use the RPi DHT11 library instead of the dht11_spi (for comparison)
+  --temp-f              (default False) Print temps in F rather than C
+
+$ python3 -m dht11_spi 
+
+DHT11:
+2023-03-03 20:44:48,315 - root - INFO - 105/105 (100.0%): Temps (min/avg/max): 23.0/24.03/24.1 deg CHumidity (min/avg/max): 19.0/19.01/20.0 %
+
+DHT22:
+2023-03-03 20:48:17,395 - root - INFO - 57/57 (100.0%): Temps (min/avg/max): 24.0/24.52/24.6 deg CHumidity (min/avg/max): 27.6/27.9/35.7 %
+
+
+MIT License
+
+Copyright (c) 2022 LearningToPi <contact@learningtopi.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 '''
 import argparse
@@ -123,7 +175,7 @@ def run_test(**kwargs):
     humid_max = round(max([read.humidity for read in data]), 2) 
     humid_avg = round(sum([read.humidity for read in data]) / success, 2) 
 
-    logger.info(f"{success}/{count} ({round(success/count, 4) * 100}%): Temps (min/avg/max): {temp_min}/{temp_avg}/{temp_max} deg {'F' if kwargs.get('temp_f', DEF_TEMP_F) else 'C'}" \
+    logger.info(f"{success}/{count} ({round(success/count, 4) * 100}%): Temps (min/avg/max): {temp_min}/{temp_avg}/{temp_max} deg {'F' if kwargs.get('temp_f', DEF_TEMP_F) else 'C'}, " \
             + f"Humidity (min/avg/max): {humid_min}/{humid_avg}/{humid_max} %")
 
 
