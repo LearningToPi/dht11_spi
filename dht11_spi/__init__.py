@@ -109,6 +109,9 @@ DHT_SIG_LOW = (46, 56)
 DHT_SIG_1 = (66, 74)
 DHT_SIG_START = (76,90)
 
+DHT11_MIN_INTERVAL = 1
+DHT22_MIN_INTERVAL = 2
+
 BIT_VALS = (128, 64, 32, 16, 8, 4, 2, 1)
 
 class DHT11_Exception(Exception):
@@ -154,6 +157,7 @@ class DHT11_Spi:
         self._binary_data = []
         self.discard_count = 0
         self.dht22 = dht22
+        self.min_interval = DHT22_MIN_INTERVAL if dht22 else DHT11_MIN_INTERVAL
         
         self._read_lock = Lock()
         self._log_extra = f"SPI{spiBus}-{self.spi_bus_hz/1000}kHz"
