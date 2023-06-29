@@ -175,7 +175,7 @@ class DHT11_Spi:
 
         # Create Soft CS
         if GPIO_LIBRARY == 'gpiod':
-            self._cs = gpio_SPI_Cs(chip=cs_chip, pin=cs_pin)
+            self._cs = gpio_SPI_Cs(chip=cs_chip, pin=cs_pin, logger=self._logger)
         else:
             raise DHT11_Exception('Unable to open CS. GPIO Library error.')
 
@@ -307,14 +307,19 @@ class gpio_SPI_Cs:
         per: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#spi-software
         the spi-bcm2835 Linux SPI driver does not use the hardware CS lines!
     '''
-    def __init__(self, chip, pin):
+    def __init__(self, chip, pin, logger):
         chip = gpiod.chip(str(chip), gpiod.chip.OPEN_BY_NUMBER)
         self._pin = chip.get_line(int(pin))
         pin_config = gpiod.line_request()
         pin_config.consumer = 'SPI_Soft_CS'
         pin_config.request_type = gpiod.line_request.DIRECTION_OUTPUT
-        pin_config.flags = gpiod.line_request.FLAG_BIAS_DISABLE
         self._pin.request(pin_config)
+
+        try:
+            self._pin.set_flags(gpiod.line_request.FLAG_BIAS_DISABLE)
+        except Exception as e:
+            logger.warning(f"Unable to set pull. Platform may not be capable. Error: {e}")
+
         self.low()
 
     def __del__(self):
