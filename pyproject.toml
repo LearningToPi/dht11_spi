@@ -1,6 +1,6 @@
 [project]
 name = "dht11_spi"
-version = "1.0.3"
+version = "1.0.5"
 description = "Python module to use the SPI bus to read DHT11/DHT22 sensors."
 authors = [{name = "Thomas Dunteman", email= "git@learningtopi.com"}]
 keywords = ["dht11", "dht22", "spi"]

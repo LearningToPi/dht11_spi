@@ -148,7 +148,7 @@ class DhtReadings:
 
 class DHT11_Spi:
     ''' Class to represent a DHT sensor connectefd to an SPI bus using.  SPI bus will be configured for 3-wire mode for half-duplex communication '''
-    def __init__(self, spiBus:int, cs_pin:int, cs_chip=None, spi_hz=SPI_BUS_HZ, set_spi_hz=True, logger=None, dht22=False):
+    def __init__(self, spiBus:int, cs_pin:int, cs_chip=None, spi_hz=SPI_BUS_HZ, set_spi_hz=True, logger=None, dht22=False, cs=0):
         self.spi_bus_hz = spi_hz
         self.spi_clock_us = 1 / self.spi_bus_hz * 1_000_000
         self.init_ms = DHT_INIT_SIGNAL_MS
@@ -164,7 +164,7 @@ class DHT11_Spi:
         self._logger = logger if logger is not None else logging_handler.create_logger('DEBUG' if DEBUG else 'INFO', name=__name__)
         self._logger.info(f"{self.info_str}: Opening")
         self._spi = spidev.SpiDev()
-        self._spi.open(spiBus, 0)
+        self._spi.open(spiBus, cs)
 
         # check and lower or raise the speed if needed
         if self._spi.max_speed_hz != self.spi_bus_hz and set_spi_hz:
